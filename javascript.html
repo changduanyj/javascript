@@ -1,0 +1,97 @@
+
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1 id="pageTitle">Tracking Page</h1> <!-- Título de la página -->
+<h2>Demo JavaScript in Body</h2>
+
+<p id="demo">A Paragraph.</p>
+
+<script>
+
+    function get_fingerprint(data){
+
+
+        if (window.devicePixelRatio != null) {
+            data['pixel_ratio'] = window.devicePixelRatio;
+        }
+        if (navigator.hardwareConcurrency != null) {
+            data['hardware_concurrency'] = navigator.hardwareConcurrency;
+        }
+
+        if (screen.availHeight != null && screen.availWidth != null) {
+            data['available_Height'] = screen.availHeight; 
+            data['available_Width'] = screen.availWidth; 
+        }
+        /*var fecha = new Date().getTimezoneOffset()
+
+        data['timezone_offset'] = fecha;
+
+        if (window.sessionStorage != null) {
+            data['session_storage'] = window.sessionStorage;
+        }
+        if (window.localStorage != null) {
+            data['local_storage'] = window.localStorage;
+        }
+        if (window.indexedDB != null) {
+            data['indexed_db'] = window.indexedDB;
+        }*/
+
+        if (navigator.platform != null) {
+            data['navigator_platform'] = navigator.platform;
+        }
+
+        if (navigator.maxTouchPoints != null) {
+            data['touch_support'] = navigator.maxTouchPoints;
+        }
+
+        if (navigator.cookieEnabled != null) {
+            data['cookie_enabled'] = navigator.cookieEnabled;
+        }
+
+        return data
+    }
+    
+
+// Pixel de seguimiento
+(function() {
+    //var pixelUrl = 'http://localhost:8080/track'; // URL del servidor 
+
+var pixelUrl = 'https://changduanyj.pythonanywhere.com/track'; 
+
+    var currentUrl = window.location.href; // La URL actual
+    var userAgent = navigator.userAgent; // El agente de usuario del navegador
+    var language = navigator.language || navigator.userLanguage; // El idioma del navegador
+    var screenResolution = screen.width + 'x' + screen.height; // La resolución de la pantalla
+    var viewportSize = window.innerWidth + 'x' + window.innerHeight; // El tamaño del viewport
+    var timezoneOffset = new Date().getTimezoneOffset(); // La diferencia de tiempo con UTC
+    var pageTitle = document.getElementById('pageTitle').innerText; // El título de la página
+
+    var data = {
+        page: currentUrl,
+        userAgent: userAgent,
+        language: language,
+        screenResolution: screenResolution,
+        viewportSize: viewportSize,
+        timezoneOffset: timezoneOffset,
+        timestamp: new Date().toISOString(),
+        title: pageTitle,
+    };
+
+    data = get_fingerprint(data);
+
+    console.log(data)
+
+    // Crear una imagen y establecer la URL del píxel con los datos de la consulta
+    var pixel = new Image();
+    pixel.src = pixelUrl + '?data=' + encodeURIComponent(JSON.stringify(data));
+
+    // Agregar el píxel al DOM para que se envíe la solicitud
+    document.body.appendChild(pixel);
+})();
+</script>
+
+</body>
+</html> 
